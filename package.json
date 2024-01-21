@@ -1,0 +1,13 @@
+{
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "i": "^0.3.7",
+    "pg": "^8.11.3",
+    "pg-format": "^1.0.4"
+  }
+}
