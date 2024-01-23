@@ -25,30 +25,22 @@ const getAllJoyas = async ({ limits = 10, order_by = "id_ASC", page = 0 }) => {
 
 
 const getJoyasByPriceRange = async ({ precio_min, precio_max, categoria, metal }) => {
-    if (parseInt(precio_min) <= 0 || parseInt(precio_max) <= 0) {
+    precio_min = parseInt(precio_min);
+    precio_max = parseInt(precio_max);
+
+    if (recio_min <= 0 || precio_max <= 0) {
         throw new Error('No pueden haber valores negativos en los precios...');
     }
+    // Validando que el precio maximo no sea menor al precio mínimo
+    if (precio_max <= precio_min) {
+        throw new Error('El Maximo es mayor o igual al Mínimo...');
+    }
 
-    if (parseInt(precio_min) >= parseInt(precio_max)) {
+    if (precio_min >= precio_max) {
         throw new Error('El mínimo es mayor o igual al máximo...');
     }
 
-    let filtros = [];
-    const values = [];
-
-    
-    const agregarFiltro = (campo, comparador, valor) => {
-        // console.log(campo,comparador,valor);
-        values.push(valor);
-        const tipoDato = typeof valor === 'number' ? 'integer' : 'varchar';
-        filtros.push(`${campo} ${comparador} $${values.length}::${tipoDato}`);
-    };
-
-    // const agregarFiltro = (campo, comparador, valor) => {
-    //     values.push(valor)
-    //     const { length } = filtros
-    //     filtros.push(`${campo} ${comparador} $${length + 1}`)
-    // }
+ 
 
     if (precio_min) agregarFiltro('precio', '>=', precio_min);
     if (precio_max) agregarFiltro('precio', '<=', precio_max);
@@ -57,14 +49,11 @@ const getJoyasByPriceRange = async ({ precio_min, precio_max, categoria, metal }
 
     let consulta = 'SELECT * FROM inventario';
 
-    
-
     if (filtros.length > 0) {
         consulta += ` WHERE ${filtros.join(' AND ')}`;
     }   
 
      const formattedQuery = format(consulta, ...values);
-    console.log('Consulta SQL:', consulta);
     const { rows: joyasFiltradas } = await pool.query(formattedQuery);
 
     return joyasFiltradas;

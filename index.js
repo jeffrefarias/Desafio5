@@ -37,12 +37,9 @@ app.get("/joyas", reportarConsulta, async (req, res) => {
 //Ruta GET filtrar joyas
 app.get("/joyas/filtros", reportarConsulta, async (req, res) => {
     try {
-        const { precio_min, precio_max, categoria, metal } = req.query;
-        
-        
+        const { precio_min, precio_max, categoria, metal } = req.query;          
         const joyasFiltradas = await getJoyasByPriceRange({ precio_min, precio_max, categoria, metal });
-
-        // Respuesta del servidor
+                // Respuesta del servidor
         return res.status(200).json({ ok: true, message: "Joyas filtradas", joyas: joyasFiltradas });
     } catch (error) {
         console.error("Error al filtrar joyas:", error.message);
