@@ -25,10 +25,9 @@ const getAllJoyas = async ({ limits = 10, order_by = "id_ASC", page = 0 }) => {
 
 
 const getJoyasByPriceRange = async ({ precio_min, precio_max, categoria, metal }) => {
-    precio_min = parseInt(precio_min);
-    precio_max = parseInt(precio_max);
-
-    if (recio_min <= 0 || precio_max <= 0) {
+    precio_min = parseInt(precio_min)
+    precio_max = parseInt(precio_max)
+    if (precio_min <= 0 || precio_max <= 0) {
         throw new Error('No pueden haber valores negativos en los precios...');
     }
     // Validando que el precio maximo no sea menor al precio mínimo
@@ -40,6 +39,11 @@ const getJoyasByPriceRange = async ({ precio_min, precio_max, categoria, metal }
         throw new Error('El mínimo es mayor o igual al máximo...');
     }
 
+    const agregarFiltro = (campo, operador, valor) => {
+        filtros.push(`${campo} ${operador} $${values.length + 1}`);
+        values.push(valor);
+    };
+
  
 
     if (precio_min) agregarFiltro('precio', '>=', precio_min);
@@ -48,6 +52,8 @@ const getJoyasByPriceRange = async ({ precio_min, precio_max, categoria, metal }
     if (metal) agregarFiltro('metal', '=', metal);
 
     let consulta = 'SELECT * FROM inventario';
+
+    
 
     if (filtros.length > 0) {
         consulta += ` WHERE ${filtros.join(' AND ')}`;
