@@ -27,6 +27,9 @@ const getAllJoyas = async ({ limits = 10, order_by = "id_ASC", page = 0 }) => {
 const getJoyasByPriceRange = async ({ precio_min, precio_max, categoria, metal }) => {
     precio_min = parseInt(precio_min)
     precio_max = parseInt(precio_max)
+    let filtros = []; 
+    const values = [];
+
     if (precio_min <= 0 || precio_max <= 0) {
         throw new Error('No pueden haber valores negativos en los precios...');
     }
@@ -43,7 +46,7 @@ const getJoyasByPriceRange = async ({ precio_min, precio_max, categoria, metal }
         filtros.push(`${campo} ${operador} $${values.length + 1}`);
         values.push(valor);
     };
-
+    
  
 
     if (precio_min) agregarFiltro('precio', '>=', precio_min);
